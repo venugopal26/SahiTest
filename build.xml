@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+/**
+ * Copyright Tyto Software Pvt. Ltd.
+ */
+-->
+<project name="demo" default="runtestschrome">
+	<taskdef name="sahi" classname="net.sf.sahi.ant.RunSahiTask" classpath="lib/ant-sahi.jar"/>
+	
+	<target name="set_timestamp">
+        <tstamp>
+            <format property="ts" pattern="yyyy_MM_dd__HH_mm_ss" locale="en, IN"/>
+        </tstamp>
+	</target>
+	
+	
+	<target name="set_properties_chrome" depends="set_timestamp">
+    	<property name="scriptDir" value="C:/sahiprov610/userdata/Venu/"/>
+    	<property name="scriptName" value="2.sah"/>
+		<property name="browser" value="chrome"/>
+		<property name="sendemail" value="false"/>
+		<property name="emailtrigger" value="success,failure"/>
+		<property name="emailproperties" value="C:\sahiprov610\userdata\config\email.properties"/>
+		<property name="sendemailperiodically" value="false"/>
+		<property name="sendemailperiodicallytime" value=""/>
+		<property name="emailPasswordHidden" value="true"/>
+		<property name="baseURL" value="http://mba-mccombs-texas.admin.data-12twenty.com/"/>
+		<property name="host" value="localhost"/>
+		<property name="port" value="9999"/>
+		<property name="singlesession" value="true"/>
+		<property name="threads" value="5"/>
+		<property name="failedSuiteName" value="2.sah"/>
+		<property name="failedSuite" value="/${failedSuiteName}"/>
+	</target>
+
+	<target name="runtestschrome" depends="set_properties_chrome">
+		<sahi suite="${scriptName}"
+			browsertype="${browser}"
+			sendemail="${sendemail}"
+	        emailtrigger="${emailtrigger}"
+	        emailproperties="${emailproperties}"
+	        sendEmailPeriodically="${sendemailperiodically}"
+			sendEmailPeriodicallyTime="${sendemailperiodicallytime}"
+			emailPasswordHidden="${emailPasswordHidden}"
+			baseurl="${baseURL}"
+			sahihost="${host}"
+			sahiport="${port}"
+			scriptsPathMaster="${scriptDir}"
+			failureproperty="sahi.failed.${browser}"
+			failedSuiteName="${failedSuiteName}"
+			haltonfailure="false"
+			singlesession="${singlesession}"
+			threads="${threads}">
+			<!-- Custom fields - add, edit or remove as required -->
+			<customfield key="UserName" value="dataqa@12twenty.com"/>
+			<customfield key="Password" value="wfcs923$23Wag"/>
+			<customfield key="BuildType" value="Baseline"/>
+			<customfield key="Baseline_Build_Number" value="6"/>
+			<customfield key="Actual_Build_Number" value="1"/>
+			<!-- Offline reports -->
+			<report type="html" logdir="C:\TeamCity\buildAgent\temp\buildTmp"/>
+		</sahi>
+		<antcall target="failsahichrome"/>
+	</target>
+
+    <target name="failsahichrome" depends="set_properties_chrome" if="sahi.failed.${browser}">
+        <fail message="Sahi tests failed on browser ${browser}!"/>
+    </target>		
+</project>

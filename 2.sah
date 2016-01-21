@@ -1,0 +1,5 @@
+
+_navigateTo("http://unc.admin.data-12twenty.com/Login");
+_setValue(_emailbox("Username"), "dataqa@12twenty.com");
+_setValue(_password("Password"), "wfcs923$23Wag");
+_click(_link("Log in"));
